@@ -18,11 +18,11 @@ const getFilteredProducts = async (req, res) => {
 
     switch (sortBy) {
       case "price-lowtohigh":
-        sort.price = 1;
+        sort.price = -1;
 
         break;
       case "price-hightolow":
-        sort.price = -1;
+        sort.price = 1;
 
         break;
       case "title-atoz":

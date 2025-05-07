@@ -20,6 +20,7 @@ const createOrder = async (req, res) => {
       cartId,
     } = req.body;
 
+    // Create PayPal payment first
     const create_payment_json = {
       intent: "sale",
       payer: {
@@ -55,37 +56,42 @@ const createOrder = async (req, res) => {
           success: false,
           message: "Error while creating paypal payment",
         });
-      } else {
-        const newlyCreatedOrder = new Order({
-          userId,
-          cartId,
-          cartItems,
-          addressInfo,
-          orderStatus,
-          paymentMethod,
-          paymentStatus,
-          totalAmount,
-          orderDate,
-          orderUpdateDate,
-          paymentId,
-          payerId,
-        });
-
-        await newlyCreatedOrder.save();
-
-        const approvalURL = paymentInfo.links.find(
-          (link) => link.rel === "approval_url"
-        ).href;
-
-        res.status(201).json({
-          success: true,
-          approvalURL,
-          orderId: newlyCreatedOrder._id,
-        });
       }
+
+      // Create temporary order with pending status
+      const tempOrder = new Order({
+        userId,
+        cartId,
+        cartItems,
+        addressInfo,
+        orderStatus: "pending",
+        paymentMethod,
+        paymentStatus: "pending",
+        totalAmount,
+        orderDate,
+        orderUpdateDate,
+        paymentId: "",
+        payerId: "",
+      });
+
+      await tempOrder.save();
+
+      const approvalURL = paymentInfo.links.find(
+        (link) => link.rel === "approval_url"
+      ).href;
+
+      res.status(201).json({
+        success: true,
+        approvalURL,
+        orderId: tempOrder._id,
+      });
     });
   } catch (e) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+      message: e.message,
+    });
   }
 };
 
@@ -102,38 +108,78 @@ const capturePayment = async (req, res) => {
       });
     }
 
-    order.paymentStatus = "paid";
-    order.orderStatus = "confirmed";
-    order.paymentId = paymentId;
-    order.payerId = payerId;
+    // If order is already paid, prevent double processing
+    if (order.paymentStatus === "paid") {
+      return res.status(400).json({
+        success: false,
+        message: "Order is already paid",
+      });
+    }
 
-    for (let item of order.cartItems) {
-      let product = await Product.findById(item.productId);
-
-      if (!product) {
-        return res.status(404).json({
+    // Verify payment with PayPal before updating order
+    paypal.payment.get(paymentId, async (error, payment) => {
+      if (error) {
+        return res.status(500).json({
           success: false,
-          message: `Not enough stock for this product ${product.title}`,
+          message: "Error verifying payment with PayPal",
         });
       }
 
-      product.totalStock -= item.quantity;
+      if (payment.state !== "approved") {
+        return res.status(400).json({
+          success: false,
+          message: "Payment not approved",
+        });
+      }
 
-      await product.save();
-    }
+      // Update order only after payment verification
+      order.paymentStatus = "paid";
+      order.orderStatus = "confirmed";
+      order.paymentId = paymentId;
+      order.payerId = payerId;
 
-    const getCartId = order.cartId;
-    await Cart.findByIdAndDelete(getCartId);
+      // Update product stock levels
+      for (let item of order.cartItems) {
+        let product = await Product.findById(item.productId);
 
-    await order.save();
+        if (!product) {
+          return res.status(404).json({
+            success: false,
+            message: `Product not found: ${item.title}`,
+          });
+        }
 
-    res.status(200).json({
-      success: true,
-      message: "Order confirmed",
-      data: order,
+        if (product.totalStock < item.quantity) {
+          return res.status(400).json({
+            success: false,
+            message: `Not enough stock for product: ${product.title}`,
+          });
+        }
+
+        product.totalStock -= item.quantity;
+        await product.save();
+      }
+
+      // Clear the cart after successful payment
+      const getCartId = order.cartId;
+      if (getCartId) {
+        await Cart.findByIdAndDelete(getCartId);
+      }
+
+      await order.save();
+
+      res.status(200).json({
+        success: true,
+        message: "Payment successful and order confirmed",
+        data: order,
+      });
     });
   } catch (e) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+      message: e.message,
+    });
   }
 };
 

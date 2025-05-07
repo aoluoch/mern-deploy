@@ -51,8 +51,6 @@ const createOrder = async (req, res) => {
 
     paypal.payment.create(create_payment_json, async (error, paymentInfo) => {
       if (error) {
-        console.log(error);
-
         return res.status(500).json({
           success: false,
           message: "Error while creating paypal payment",
@@ -87,11 +85,7 @@ const createOrder = async (req, res) => {
       }
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -139,11 +133,7 @@ const capturePayment = async (req, res) => {
       data: order,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -165,11 +155,7 @@ const getAllOrdersByUser = async (req, res) => {
       data: orders,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -191,11 +177,7 @@ const getOrderDetails = async (req, res) => {
       data: order,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

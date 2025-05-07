@@ -124,8 +124,6 @@ const authSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        console.log(action);
-
         state.isLoading = false;
         state.user = action.payload.success ? action.payload.user : null;
         state.isAuthenticated = action.payload.success;
@@ -151,10 +149,10 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
       })
-      .addCase(logoutUser.fulfilled, (state, action) => {
+      .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
-        state.isAuthenticated = false;
+        state.error = null;
       });
   },
 });

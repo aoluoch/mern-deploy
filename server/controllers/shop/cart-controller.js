@@ -43,11 +43,7 @@ const addToCart = async (req, res) => {
       data: cart,
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -100,11 +96,7 @@ const fetchCartItems = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -163,11 +155,7 @@ const updateCartItemQty = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -221,11 +209,7 @@ const deleteCartItem = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

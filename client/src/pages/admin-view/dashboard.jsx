@@ -11,8 +11,6 @@ function AdminDashboard() {
   const dispatch = useDispatch();
   const { featureImageList } = useSelector((state) => state.commonFeature);
 
-  console.log(uploadedImageUrl, "uploadedImageUrl");
-
   function handleUploadFeatureImage() {
     dispatch(addFeatureImage(uploadedImageUrl)).then((data) => {
       if (data?.payload?.success) {
@@ -27,7 +25,9 @@ function AdminDashboard() {
     dispatch(getFeatureImages());
   }, [dispatch]);
 
-  console.log(featureImageList, "featureImageList");
+  useEffect(() => {
+    setIsLoading(false);
+  }, [uploadedImageUrl]);
 
   return (
     <div>

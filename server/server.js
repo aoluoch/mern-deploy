@@ -22,8 +22,14 @@ const commonFeatureRouter = require("./routes/common/feature-routes");
 
 mongoose
   .connect(process.env.MONGO_URL)
-  .then(() => console.log("MongoDB connected"))
-  .catch((error) => console.log(error));
+  .then(() => {
+    // Keep this log as it's important for server monitoring
+    console.log("MongoDB connected");
+  })
+  .catch((error) => {
+    // Keep this log as it's important for server monitoring
+    console.log(error);
+  });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -58,4 +64,5 @@ app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 
+// Keep this log as it's important for server monitoring
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));

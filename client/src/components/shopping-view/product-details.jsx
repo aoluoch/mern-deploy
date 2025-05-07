@@ -1,7 +1,7 @@
 import { Star, X } from "lucide-react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogClose } from "../ui/dialog";
+import { Dialog, DialogContent, DialogClose, DialogTitle } from "../ui/dialog";
 import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { useDispatch, useSelector } from "react-redux";
@@ -100,6 +100,9 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="h-[90vh] w-full max-w-[95vw] md:max-w-5xl p-0 relative">
+        <DialogTitle className="sr-only">
+          Product Details - {productDetails?.title}
+        </DialogTitle>
         <DialogClose asChild>
           <button
             className="absolute right-4 top-4 text-muted-foreground hover:text-foreground z-50"

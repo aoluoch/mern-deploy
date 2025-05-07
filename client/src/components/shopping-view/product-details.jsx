@@ -99,7 +99,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="h-[90vh] w-full max-w-[95vw] md:max-w-5xl p-0 relative">
+      <DialogContent className="max-h-[90vh] w-full max-w-[95vw] md:max-w-5xl p-0 relative">
         <DialogTitle className="sr-only">
           Product Details - {productDetails?.title}
         </DialogTitle>
@@ -112,128 +112,126 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
           </button>
         </DialogClose>
 
-        <div className="flex h-full flex-col overflow-hidden">
-          <div className="flex-1 overflow-y-auto">
-            <div className="grid h-full grid-cols-1 md:grid-cols-[1fr,1.5fr]">
-              <div className="relative flex h-[300px] md:h-[600px] items-center justify-center bg-background p-6">
-                <div className="relative h-full w-full">
-                  <img
-                    src={productDetails?.image}
-                    alt={productDetails?.title}
-                    className="h-full w-full object-contain"
-                  />
-                </div>
+        <div className="flex flex-col max-h-[90vh] overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr,1.5fr] gap-4">
+            <div className="relative flex min-h-[250px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] items-center justify-center bg-background p-4 md:p-6">
+              <div className="relative h-full w-full">
+                <img
+                  src={productDetails?.image}
+                  alt={productDetails?.title}
+                  className="h-full w-full object-contain"
+                />
               </div>
+            </div>
 
-              <div className="flex flex-col p-6 space-y-6">
-                <div className="space-y-4">
-                  <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
-                    {productDetails?.title}
-                  </h1>
-                  <p className="text-sm text-muted-foreground sm:text-base">
-                    {productDetails?.description}
+            <div className="flex flex-col p-6 space-y-6">
+              <div className="space-y-4">
+                <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
+                  {productDetails?.title}
+                </h1>
+                <p className="text-sm text-muted-foreground sm:text-base">
+                  {productDetails?.description}
+                </p>
+
+                <div className="flex items-baseline gap-4">
+                  <p
+                    className={`text-2xl font-bold ${
+                      productDetails?.salePrice > 0
+                        ? "line-through text-muted-foreground"
+                        : ""
+                    }`}
+                  >
+                    ${productDetails?.price}
                   </p>
-
-                  <div className="flex items-baseline gap-4">
-                    <p
-                      className={`text-2xl font-bold ${
-                        productDetails?.salePrice > 0
-                          ? "line-through text-muted-foreground"
-                          : ""
-                      }`}
-                    >
-                      ${productDetails?.price}
+                  {productDetails?.salePrice > 0 && (
+                    <p className="text-2xl font-bold text-primary">
+                      ${productDetails?.salePrice}
                     </p>
-                    {productDetails?.salePrice > 0 && (
-                      <p className="text-2xl font-bold text-primary">
-                        ${productDetails?.salePrice}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <StarRatingComponent rating={averageReview} />
-                    <span className="text-sm text-muted-foreground">
-                      ({averageReview.toFixed(2)})
-                    </span>
-                  </div>
-
-                  {productDetails?.totalStock === 0 ? (
-                    <Button className="w-full opacity-60 cursor-not-allowed">
-                      Out of Stock
-                    </Button>
-                  ) : (
-                    <Button
-                      className="w-full"
-                      onClick={() =>
-                        handleAddToCart(
-                          productDetails?._id,
-                          productDetails?.totalStock
-                        )
-                      }
-                    >
-                      Add to Cart
-                    </Button>
                   )}
                 </div>
 
-                <Separator className="my-2" />
+                <div className="flex items-center gap-2">
+                  <StarRatingComponent rating={averageReview} />
+                  <span className="text-sm text-muted-foreground">
+                    ({averageReview.toFixed(2)})
+                  </span>
+                </div>
 
+                {productDetails?.totalStock === 0 ? (
+                  <Button className="w-full opacity-60 cursor-not-allowed">
+                    Out of Stock
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full"
+                    onClick={() =>
+                      handleAddToCart(
+                        productDetails?._id,
+                        productDetails?.totalStock
+                      )
+                    }
+                  >
+                    Add to Cart
+                  </Button>
+                )}
+              </div>
+
+              <Separator className="my-2" />
+
+              <div className="space-y-4">
+                <h2 className="text-lg font-semibold">Reviews</h2>
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold">Reviews</h2>
-                  <div className="space-y-4">
-                    {reviews && reviews.length > 0 ? (
-                      reviews.map((reviewItem) => (
-                        <div className="flex gap-4" key={reviewItem._id}>
-                          <Avatar className="h-10 w-10 border">
-                            <AvatarFallback>
-                              {reviewItem?.userName[0].toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 space-y-1">
-                            <div className="flex items-center justify-between">
-                              <h3 className="font-semibold">
-                                {reviewItem?.userName}
-                              </h3>
-                              <StarRatingComponent
-                                rating={reviewItem?.reviewValue}
-                              />
-                            </div>
-                            <p className="text-sm text-muted-foreground">
-                              {reviewItem.reviewMessage}
-                            </p>
+                  {reviews && reviews.length > 0 ? (
+                    reviews.map((reviewItem) => (
+                      <div className="flex gap-4" key={reviewItem._id}>
+                        <Avatar className="h-10 w-10 border">
+                          <AvatarFallback>
+                            {reviewItem?.userName[0].toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <h3 className="font-semibold">
+                              {reviewItem?.userName}
+                            </h3>
+                            <StarRatingComponent
+                              rating={reviewItem?.reviewValue}
+                            />
                           </div>
+                          <p className="text-sm text-muted-foreground">
+                            {reviewItem.reviewMessage}
+                          </p>
                         </div>
-                      ))
-                    ) : (
-                      <p className="text-sm text-muted-foreground">
-                        No Reviews
-                      </p>
-                    )}
-                  </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No Reviews
+                    </p>
+                  )}
+                </div>
 
-                  <div className="space-y-3 pt-4">
-                    <Label>Write a review</Label>
-                    <div className="flex gap-1">
-                      <StarRatingComponent
-                        rating={rating}
-                        handleRatingChange={handleRatingChange}
-                      />
-                    </div>
-                    <Input
-                      name="reviewMsg"
-                      value={reviewMsg}
-                      onChange={(event) => setReviewMsg(event.target.value)}
-                      placeholder="Write a review..."
+                <div className="space-y-3 pt-4">
+                  <Label>Write a review</Label>
+                  <div className="flex gap-1">
+                    <StarRatingComponent
+                      rating={rating}
+                      handleRatingChange={handleRatingChange}
                     />
-                    <Button
-                      onClick={handleAddReview}
-                      disabled={reviewMsg.trim() === ""}
-                      className="w-full"
-                    >
-                      Submit Review
-                    </Button>
                   </div>
+                  <Input
+                    name="reviewMsg"
+                    value={reviewMsg}
+                    onChange={(event) => setReviewMsg(event.target.value)}
+                    placeholder="Write a review..."
+                  />
+                  <Button
+                    onClick={handleAddReview}
+                    disabled={reviewMsg.trim() === ""}
+                    className="w-full"
+                  >
+                    Submit Review
+                  </Button>
                 </div>
               </div>
             </div>

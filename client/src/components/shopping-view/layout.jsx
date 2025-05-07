@@ -3,9 +3,9 @@ import ShoppingHeader from "./header";
 
 function ShoppingLayout() {
   return (
-    <div className="relative min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white">
       <ShoppingHeader />
-      <main className="flex-1">
+      <main className="flex-1 mt-16">
         <Outlet />
       </main>
     </div>

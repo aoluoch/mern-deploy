@@ -144,10 +144,10 @@ function ShoppingHeader() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto">
-        <div className="flex h-16 items-center justify-between px-4">
-          <Link to="/shop/home" className="flex items-center gap-2">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center gap-8">
+          <Link to="/shop/home" className="flex items-center gap-2 shrink-0">
             <HousePlug className="h-6 w-6" />
             <span className="font-bold text-lg md:text-xl">Ecommerce</span>
           </Link>
@@ -155,7 +155,7 @@ function ShoppingHeader() {
           {/* Mobile menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden">
+              <Button variant="outline" size="icon" className="ml-auto lg:hidden">
                 <Menu className="h-6 w-6" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
@@ -171,7 +171,7 @@ function ShoppingHeader() {
           </Sheet>
 
           {/* Desktop menu */}
-          <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-between lg:space-x-6">
+          <div className="hidden lg:flex flex-1 items-center justify-between">
             <MenuItems />
             <HeaderRightContent />
           </div>

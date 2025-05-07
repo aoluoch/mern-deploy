@@ -99,32 +99,27 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="max-h-[90vh] w-full max-w-[95vw] md:max-w-5xl p-0 relative">
+      <DialogContent className="max-w-[95vw] md:max-w-5xl p-0 relative bg-background">
         <DialogTitle className="sr-only">
           Product Details - {productDetails?.title}
         </DialogTitle>
-        <DialogClose asChild>
-          <button
-            className="absolute right-4 top-4 text-muted-foreground hover:text-foreground z-50"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </button>
+
+        <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close</span>
         </DialogClose>
 
-        <div className="flex flex-col max-h-[90vh] overflow-y-auto">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr,1.5fr] gap-4">
-            <div className="relative flex min-h-[250px] sm:min-h-[300px] md:min-h-[400px] lg:min-h-[500px] items-center justify-center bg-background p-4 md:p-6">
-              <div className="relative h-full w-full">
-                <img
-                  src={productDetails?.image}
-                  alt={productDetails?.title}
-                  className="h-full w-full object-contain"
-                />
-              </div>
+        <div className="h-[90vh] overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 md:p-6">
+            <div className="relative flex min-h-[200px] sm:min-h-[300px] md:min-h-[400px] items-center justify-center bg-background rounded-lg">
+              <img
+                src={productDetails?.image}
+                alt={productDetails?.title}
+                className="h-full w-full object-contain rounded-lg"
+              />
             </div>
 
-            <div className="flex flex-col p-6 space-y-6">
+            <div className="flex flex-col space-y-6">
               <div className="space-y-4">
                 <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">
                   {productDetails?.title}
@@ -133,7 +128,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                   {productDetails?.description}
                 </p>
 
-                <div className="flex items-baseline gap-4">
+                <div className="flex flex-wrap items-baseline gap-4">
                   <p
                     className={`text-2xl font-bold ${
                       productDetails?.salePrice > 0
@@ -180,17 +175,17 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
 
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold">Reviews</h2>
-                <div className="space-y-4">
+                <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
                   {reviews && reviews.length > 0 ? (
                     reviews.map((reviewItem) => (
                       <div className="flex gap-4" key={reviewItem._id}>
-                        <Avatar className="h-10 w-10 border">
+                        <Avatar className="h-10 w-10 border shrink-0">
                           <AvatarFallback>
                             {reviewItem?.userName[0].toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 space-y-1">
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between flex-wrap gap-2">
                             <h3 className="font-semibold">
                               {reviewItem?.userName}
                             </h3>
@@ -198,16 +193,14 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                               rating={reviewItem?.reviewValue}
                             />
                           </div>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground break-words">
                             {reviewItem.reviewMessage}
                           </p>
                         </div>
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground">
-                      No Reviews
-                    </p>
+                    <p className="text-sm text-muted-foreground">No Reviews</p>
                   )}
                 </div>
 

@@ -9,16 +9,14 @@ import { Skeleton } from "../ui/skeleton";
 function ProductImageUpload({
   imageFile,
   setImageFile,
-  imageLoadingState,
   uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,
+  imageLoadingState,
   isEditMode,
   isCustomStyling = false,
 }) {
   const inputRef = useRef(null);
-
-  console.log(isEditMode, "isEditMode");
 
   function handleImageFileChange(event) {
     const file = event.target.files[0];
@@ -61,7 +59,7 @@ function ProductImageUpload({
         }
       }
     } catch (error) {
-      console.log(error);
+      setImageLoadingState(false);
     }
   }
 

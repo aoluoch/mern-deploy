@@ -21,6 +21,13 @@ const addToCart = async (req, res) => {
       });
     }
 
+    if (product.totalStock < quantity) {
+      return res.status(400).json({
+        success: false,
+        message: "Not enough stock available",
+      });
+    }
+
     let cart = await Cart.findOne({ userId });
 
     if (!cart) {
@@ -34,16 +41,46 @@ const addToCart = async (req, res) => {
     if (findCurrentProductIndex === -1) {
       cart.items.push({ productId, quantity });
     } else {
-      cart.items[findCurrentProductIndex].quantity += quantity;
+      const newQuantity = cart.items[findCurrentProductIndex].quantity + quantity;
+      if (newQuantity > product.totalStock) {
+        return res.status(400).json({
+          success: false,
+          message: `Only ${product.totalStock} items available in stock`,
+        });
+      }
+      cart.items[findCurrentProductIndex].quantity = newQuantity;
     }
 
     await cart.save();
+
+    // Populate cart items with product details
+    await cart.populate({
+      path: "items.productId",
+      select: "image title price salePrice",
+    });
+
+    const populateCartItems = cart.items.map((item) => ({
+      productId: item.productId._id,
+      image: item.productId.image,
+      title: item.productId.title,
+      price: item.productId.price,
+      salePrice: item.productId.salePrice,
+      quantity: item.quantity,
+    }));
+
     res.status(200).json({
       success: true,
-      data: cart,
+      data: {
+        ...cart._doc,
+        items: populateCartItems,
+      },
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ 
+      success: false,
+      error: "Internal Server Error",
+      message: error.message 
+    });
   }
 };
 

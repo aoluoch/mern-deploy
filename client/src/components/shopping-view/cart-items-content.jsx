@@ -1,121 +1,99 @@
-import { Minus, Plus, Trash } from "lucide-react";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCartItem, updateCartQuantity } from "@/store/shop/cart-slice";
 import { useToast } from "../ui/use-toast";
 
 function UserCartItemsContent({ cartItem }) {
-  const { user } = useSelector((state) => state.auth);
-  const { cartItems } = useSelector((state) => state.shopCart);
-  const { productList } = useSelector((state) => state.shopProducts);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const { toast } = useToast();
 
-  function handleUpdateQuantity(getCartItem, typeOfAction) {
-    if (typeOfAction == "plus") {
-      let getCartItems = cartItems.items || [];
+  function handleUpdateQuantity(type) {
+    let newQuantity =
+      type === "increment" ? cartItem.quantity + 1 : cartItem.quantity - 1;
 
-      if (getCartItems.length) {
-        const indexOfCurrentCartItem = getCartItems.findIndex(
-          (item) => item.productId === getCartItem?.productId
-        );
-
-        const getCurrentProductIndex = productList.findIndex(
-          (product) => product._id === getCartItem?.productId
-        );
-        const getTotalStock = productList[getCurrentProductIndex].totalStock;
-
-        console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
-
-        if (indexOfCurrentCartItem > -1) {
-          const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
-          if (getQuantity + 1 > getTotalStock) {
-            toast({
-              title: `Only ${getQuantity} quantity can be added for this item`,
-              variant: "destructive",
-            });
-
-            return;
-          }
+    if (newQuantity === 0) {
+      dispatch(deleteCartItem(cartItem?._id)).then((response) => {
+        if (response?.payload?.success) {
+          toast({
+            title: "Cart Item removed successfully",
+          });
         }
-      }
+      });
+      return;
     }
 
     dispatch(
       updateCartQuantity({
+        cartItemId: cartItem?._id,
         userId: user?.id,
-        productId: getCartItem?.productId,
-        quantity:
-          typeOfAction === "plus"
-            ? getCartItem?.quantity + 1
-            : getCartItem?.quantity - 1,
+        quantity: newQuantity,
       })
-    ).then((data) => {
-      if (data?.payload?.success) {
+    ).then((response) => {
+      if (response?.payload?.success) {
         toast({
-          title: "Cart item is updated successfully",
+          title: `Quantity ${type === "increment" ? "increased" : "decreased"}`,
         });
       }
     });
   }
 
-  function handleCartItemDelete(getCartItem) {
-    dispatch(
-      deleteCartItem({ userId: user?.id, productId: getCartItem?.productId })
-    ).then((data) => {
-      if (data?.payload?.success) {
+  function handleRemoveCartItem() {
+    dispatch(deleteCartItem(cartItem?._id)).then((response) => {
+      if (response?.payload?.success) {
         toast({
-          title: "Cart item is deleted successfully",
+          title: "Cart Item removed successfully",
         });
       }
     });
   }
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className="flex items-start gap-4">
       <img
-        src={cartItem?.image}
-        alt={cartItem?.title}
-        className="w-20 h-20 rounded object-cover"
+        src={cartItem?.productId?.image}
+        className="h-[120px] w-[120px] rounded-lg object-cover"
       />
-      <div className="flex-1">
-        <h3 className="font-extrabold">{cartItem?.title}</h3>
-        <div className="flex items-center gap-2 mt-1">
+      <div className="flex flex-1 flex-col gap-2">
+        <div className="flex items-start justify-between">
+          <div>
+            <h3 className="font-semibold">{cartItem?.productId?.title}</h3>
+            <p className="text-sm text-muted-foreground">
+              ${cartItem?.productId?.price}
+            </p>
+          </div>
           <Button
-            variant="outline"
-            className="h-8 w-8 rounded-full"
+            onClick={handleRemoveCartItem}
+            variant="ghost"
             size="icon"
-            disabled={cartItem?.quantity === 1}
-            onClick={() => handleUpdateQuantity(cartItem, "minus")}
+            className="rounded-full"
           >
-            <Minus className="w-4 h-4" />
-            <span className="sr-only">Decrease</span>
-          </Button>
-          <span className="font-semibold">{cartItem?.quantity}</span>
-          <Button
-            variant="outline"
-            className="h-8 w-8 rounded-full"
-            size="icon"
-            onClick={() => handleUpdateQuantity(cartItem, "plus")}
-          >
-            <Plus className="w-4 h-4" />
-            <span className="sr-only">Decrease</span>
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Remove</span>
           </Button>
         </div>
-      </div>
-      <div className="flex flex-col items-end">
-        <p className="font-semibold">
-          $
-          {(
-            (cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) *
-            cartItem?.quantity
-          ).toFixed(2)}
-        </p>
-        <Trash
-          onClick={() => handleCartItemDelete(cartItem)}
-          className="cursor-pointer mt-1"
-          size={20}
-        />
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => handleUpdateQuantity("decrement")}
+            variant="outline"
+            size="icon"
+            className="h-7 w-7 rounded-full"
+          >
+            <Minus className="h-3 w-3" />
+            <span className="sr-only">Remove one item</span>
+          </Button>
+          <span className="text-sm">{cartItem?.quantity}</span>
+          <Button
+            onClick={() => handleUpdateQuantity("increment")}
+            variant="outline"
+            size="icon"
+            className="h-7 w-7 rounded-full"
+          >
+            <Plus className="h-3 w-3" />
+            <span className="sr-only">Add one item</span>
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import {
-  BadgeCheck,
-  ChartNoAxesCombined,
+  Check,
   LayoutDashboard,
-  ShoppingBasket,
+  Store,
+  Home,
 } from "lucide-react";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,13 +19,13 @@ const adminSidebarMenuItems = [
     id: "products",
     label: "Products",
     path: "/admin/products",
-    icon: <ShoppingBasket />,
+    icon: <Store />,
   },
   {
     id: "orders",
     label: "Orders",
     path: "/admin/orders",
-    icon: <BadgeCheck />,
+    icon: <Check />,
   },
 ];
 
@@ -57,9 +57,9 @@ function AdminSideBar({ open, setOpen }) {
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="w-[240px] p-0">
+        <SheetContent side="left" className="w-full max-w-xs p-0 bg-background">
           <div className="flex flex-col h-full">
-            <div className="border-b p-4">
+            <div className="border-b px-4 py-3">
               <div
                 onClick={() => {
                   navigate("/admin/dashboard");
@@ -67,26 +67,25 @@ function AdminSideBar({ open, setOpen }) {
                 }}
                 className="flex cursor-pointer items-center gap-2"
               >
-                <ChartNoAxesCombined size={24} />
+                <Home size={24} />
                 <h1 className="text-xl font-bold">Admin Panel</h1>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 p-4">
               <MenuItems setOpen={setOpen} />
             </div>
           </div>
         </SheetContent>
       </Sheet>
-
-      <aside className="hidden border-r bg-background lg:block lg:w-[240px]">
-        <div className="flex h-full flex-col gap-2">
-          <div className="border-b p-6">
+      <aside className="hidden lg:flex w-64 shrink-0 border-r bg-background">
+        <div className="flex flex-col h-full">
+          <div className="border-b px-4 py-3">
             <div
               onClick={() => navigate("/admin/dashboard")}
               className="flex cursor-pointer items-center gap-2"
             >
-              <ChartNoAxesCombined size={24} />
-              <h1 className="text-xl font-bold">Admin Panel</h1>
+                <Home size={24} />
+                <h1 className="text-xl font-bold">Admin Panel</h1>
             </div>
           </div>
           <div className="flex-1 p-4">

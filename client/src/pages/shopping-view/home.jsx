@@ -1,18 +1,18 @@
 import { Button } from "@/components/ui/button";
 import {
   Airplay,
-  BabyIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CloudLightning,
+  Baby,
+  ChevronLeft,
+  ChevronRight,
+  Cloud,
   Heater,
-  Images,
-  Shirt,
+  Image,
   ShirtIcon,
-  ShoppingBasket,
-  UmbrellaIcon,
-  WashingMachine,
-  WatchIcon,
+  ShoppingBag,
+  Umbrella,
+  Watch,
+  Store,
+  Shirt,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -30,18 +30,18 @@ import { getFeatureImages } from "@/store/common-slice";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
-  { id: "women", label: "Women", icon: CloudLightning },
-  { id: "kids", label: "Kids", icon: BabyIcon },
-  { id: "accessories", label: "Accessories", icon: WatchIcon },
-  { id: "footwear", label: "Footwear", icon: UmbrellaIcon },
+  { id: "women", label: "Women", icon: Cloud },
+  { id: "kids", label: "Kids", icon: Baby },
+  { id: "accessories", label: "Accessories", icon: Watch },
+  { id: "footwear", label: "Footwear", icon: Umbrella },
 ];
 
 const brandsWithIcon = [
   { id: "nike", label: "Nike", icon: Shirt },
-  { id: "adidas", label: "Adidas", icon: WashingMachine },
-  { id: "puma", label: "Puma", icon: ShoppingBasket },
+  { id: "adidas", label: "Adidas", icon: Store },
+  { id: "puma", label: "Puma", icon: ShoppingBag },
   { id: "levi", label: "Levi's", icon: Airplay },
-  { id: "zara", label: "Zara", icon: Images },
+  { id: "zara", label: "Zara", icon: Image },
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 function ShoppingHome() {
@@ -143,7 +143,7 @@ function ShoppingHome() {
           }
           className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
         >
-          <ChevronLeftIcon className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4" />
         </Button>
         <Button
           variant="outline"
@@ -155,7 +155,7 @@ function ShoppingHome() {
           }
           className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
         >
-          <ChevronRightIcon className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
       <section className="py-12 bg-gray-50">

@@ -1,4 +1,4 @@
-import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
+import { Home, LogOut, Menu, ShoppingCart, UserCog } from "lucide-react";
 import {
   Link,
   useLocation,
@@ -148,7 +148,7 @@ function ShoppingHeader() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center gap-8">
           <Link to="/shop/home" className="flex items-center gap-2 shrink-0">
-            <HousePlug className="h-6 w-6" />
+            <Home className="h-6 w-6" />
             <span className="font-bold text-lg md:text-xl">Ecommerce</span>
           </Link>
 

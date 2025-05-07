@@ -1,4 +1,4 @@
-import { StarIcon } from "lucide-react";
+import { Star } from "lucide-react";
 import { Button } from "../ui/button";
 
 function StarRatingComponent({ rating, handleRatingChange }) {
@@ -15,7 +15,7 @@ function StarRatingComponent({ rating, handleRatingChange }) {
       size="icon"
       onClick={handleRatingChange ? () => handleRatingChange(star) : null}
     >
-      <StarIcon
+      <Star
         className={`w-6 h-6 ${
           star <= rating ? "fill-yellow-500" : "fill-black"
         }`}

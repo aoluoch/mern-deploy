@@ -12,11 +12,7 @@ const handleImageUpload = async (req, res) => {
       result,
     });
   } catch (error) {
-    console.log(error);
-    res.json({
-      success: false,
-      message: "Error occured",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -34,8 +30,6 @@ const addProduct = async (req, res) => {
       totalStock,
       averageReview,
     } = req.body;
-
-    console.log(averageReview, "averageReview");
 
     const newlyCreatedProduct = new Product({
       image,
@@ -55,11 +49,7 @@ const addProduct = async (req, res) => {
       data: newlyCreatedProduct,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error occured",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -68,16 +58,25 @@ const addProduct = async (req, res) => {
 const fetchAllProducts = async (req, res) => {
   try {
     const listOfProducts = await Product.find({});
+    const productsWithReviews = await Promise.all(
+      listOfProducts.map(async (product) => {
+        const reviews = await Review.find({ productId: product._id });
+        const averageReview =
+          reviews.length > 0
+            ? reviews.reduce((sum, review) => sum + review.reviewValue, 0) /
+              reviews.length
+            : 0;
+
+        return { ...product._doc, reviews, averageReview };
+      })
+    );
+
     res.status(200).json({
       success: true,
-      data: listOfProducts,
+      data: productsWithReviews,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error occured",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -121,11 +120,7 @@ const editProduct = async (req, res) => {
       data: findProduct,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error occured",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -146,11 +141,7 @@ const deleteProduct = async (req, res) => {
       message: "Product delete successfully",
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error occured",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

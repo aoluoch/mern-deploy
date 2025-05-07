@@ -16,11 +16,7 @@ const getAllOrdersOfAllUsers = async (req, res) => {
       data: orders,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -42,11 +38,7 @@ const getOrderDetailsForAdmin = async (req, res) => {
       data: order,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -71,11 +63,7 @@ const updateOrderStatus = async (req, res) => {
       message: "Order status is updated successfully!",
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured!",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

@@ -27,11 +27,7 @@ const addAddress = async (req, res) => {
       data: newlyCreatedAddress,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -52,11 +48,7 @@ const fetchAllAddress = async (req, res) => {
       data: addressList,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -93,11 +85,7 @@ const editAddress = async (req, res) => {
       data: address,
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -125,11 +113,7 @@ const deleteAddress = async (req, res) => {
       message: "Address deleted successfully",
     });
   } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      success: false,
-      message: "Error",
-    });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

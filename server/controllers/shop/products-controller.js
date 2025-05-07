@@ -46,12 +46,8 @@ const getFilteredProducts = async (req, res) => {
       success: true,
       data: products,
     });
-  } catch (e) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured",
-    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -70,12 +66,8 @@ const getProductDetails = async (req, res) => {
       success: true,
       data: product,
     });
-  } catch (e) {
-    console.log(error);
-    res.status(500).json({
-      success: false,
-      message: "Some error occured",
-    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
